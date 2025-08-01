@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 5996564569339563483}
   - component: {fileID: 1329971403739750869}
   - component: {fileID: 7666227144211100474}
-  - component: {fileID: 4554510580640222374}
   m_Layer: 0
   m_Name: Particles_Fire
   m_TagString: Untagged
@@ -233,7 +232,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 2
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -4967,19 +4966,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &4554510580640222374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2853635650497094099}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613f871d185650142b4a0eded6f6c880, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleMode: 2
 --- !u!1 &6881484773713530523
 GameObject:
   m_ObjectHideFlags: 0
@@ -4991,7 +4977,6 @@ GameObject:
   - component: {fileID: 9142424431282376780}
   - component: {fileID: 4909140518919363523}
   - component: {fileID: 3738898397016881224}
-  - component: {fileID: 5382375666004528169}
   m_Layer: 0
   m_Name: Particles_Smoke
   m_TagString: Untagged
@@ -5089,7 +5074,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 2
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9823,16 +9808,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &5382375666004528169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6881484773713530523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613f871d185650142b4a0eded6f6c880, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleMode: 2

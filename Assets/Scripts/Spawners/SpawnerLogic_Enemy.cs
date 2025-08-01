@@ -5,7 +5,6 @@ public class SpawnerLogic_Enemy : MonoBehaviour
     // Initial Variable Values
     enum spawnerType{Fodder, Special, SpecialEvent, MiniBoss, Boss};
     [SerializeField] spawnerType _spawnerType;
-    float currentTime;
     float spawnCooldown;
 
     // References
@@ -15,7 +14,7 @@ public class SpawnerLogic_Enemy : MonoBehaviour
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
-        Debug.Log("Spawner Type: " + _spawnerType); 
+        Debug.Log($"Spawner Type: {_spawnerType}"); 
         // Check _spawnerType and set initial spawnCooldown
         switch (_spawnerType)
         {
@@ -38,8 +37,7 @@ public class SpawnerLogic_Enemy : MonoBehaviour
     void Update()
     {
         // Count down to next spawn
-        currentTime = 1 * Time.deltaTime;
-        spawnCooldown -= currentTime;
+        spawnCooldown -= Time.deltaTime;
         // Spawn an enemy of matching spawner type if quota not fulfilled
         if (spawnCooldown <= 0)
         {

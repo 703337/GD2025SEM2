@@ -109,7 +109,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 2
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -4991,7 +4991,6 @@ GameObject:
   - component: {fileID: 1206091188167103575}
   - component: {fileID: 7520709589717267959}
   - component: {fileID: 8511672446281790726}
-  - component: {fileID: 3668848794759037292}
   m_Layer: 0
   m_Name: Particles_Spit
   m_TagString: Untagged
@@ -5089,7 +5088,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 2
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9823,16 +9822,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &3668848794759037292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8369705916200127216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613f871d185650142b4a0eded6f6c880, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scaleMode: 2

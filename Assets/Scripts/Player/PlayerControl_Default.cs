@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerControl_Default : MonoBehaviour
@@ -5,16 +6,22 @@ public class PlayerControl_Default : MonoBehaviour
     // Initial Variable Values
     [SerializeField] float moveSpeed = 4; // Player movement speed.
     [SerializeField] float sprintMult = 2; // Player movement speed modifier when sprinting.
+    [SerializeField] int staminaMax = 100; // Player max stamina.
+    int stamina; // Player current stamina.
     bool isSprinting; // Whether or not the player is sprinting.
+    float staminaDrainTimer = 0.1f; // Player stamina drain modifier.
+    float staminaRegenTimer = 0.5f; // Player stamina regen modifier.
     [SerializeField] float jumpForce = 10; // Player jump force.
     bool isGrounded = true; // Checks whether the player is grounded or not.
-    [SerializeField] int healthMax = 100; // Player max health;
+    [SerializeField] int healthMax = 100; // Player max health.
     int health; // Player current health.
     bool isDead; // Checks whether the player is dead or not.
 
     //References
     Rigidbody rb; // The player's body.
     Camera face; // The player's face (camera).
+    [SerializeField] TextMeshProUGUI healthDisplay; // Display for the player's health.
+    [SerializeField] TextMeshProUGUI staminaDisplay; // Display for the player's stamina.
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,8 +32,14 @@ public class PlayerControl_Default : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         // Lock the cursor by default
         Cursor.lockState = CursorLockMode.Locked;
+        // Set current stamina based on max stamina
+        stamina = staminaMax;
         // Set current health based on max health
         health = healthMax;
+        // Set initial displayed stamina
+        staminaDisplay.text = $"Stamina: {stamina}/{staminaMax}";
+        // Set initial displayed health
+        healthDisplay.text = $"Health: {health}/{healthMax}";
     }
 
     // Update is called once per frame
@@ -42,7 +55,7 @@ public class PlayerControl_Default : MonoBehaviour
             return;
         }
 
-        // Unlock the cursor when pressing escape and disable all controls until locked again
+        // Unlock the cursor when pressing escape
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
@@ -53,13 +66,9 @@ public class PlayerControl_Default : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            else
-            {
-                return;
-            }
         }
 
-        // CODE BELOW ALTERED FROM A PREVIOUS PROJECT <<<<
+
         // Handle Movement
         // Check if the player is sprinting
         if (Input.GetKey(KeyCode.LeftShift))
@@ -71,23 +80,42 @@ public class PlayerControl_Default : MonoBehaviour
             isSprinting = false;
         }
 
-        // Get the direction the player is facing relative to their inputs
+        // Set the direction the player is moving based on their inputs, unless the cursor is unlocked
         var direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        if (Cursor.lockState == CursorLockMode.None)
+        {
+            direction = new Vector3(0, 0, 0);
+        }
 
-        // Move the player based on the direction they are facing
-        if (isSprinting == true)
+        // Move the player based on the direction they are trying to move
+        if (isSprinting == true && (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) && stamina > 0)
         {
             transform.Translate(direction * (moveSpeed * sprintMult) * Time.deltaTime);
+            // Drain stamina
+            staminaDrainTimer -= Time.deltaTime;
+            if (staminaDrainTimer <= 0)
+            {
+                stamina -= 1;
+                staminaDrainTimer = 0.1f;
+                staminaDisplay.text = $"Stamina: {stamina}/{staminaMax}";
+            }
         }
         else
         {
             transform.Translate(direction * moveSpeed * Time.deltaTime);
+            // Regenerate stamina when not trying to sprint
+            staminaRegenTimer -= Time.deltaTime;
+            if (staminaRegenTimer <= 0 && stamina < staminaMax && isSprinting == false)
+            {
+                stamina += 1;
+                staminaRegenTimer = 0.5f;
+                staminaDisplay.text = $"Stamina: {stamina}/{staminaMax}";
+            }
         }
-        // CODE ABOVE ALTERED FROM A PREVIOUS PROJECT <<<<
 
 
-        // Make the player jump
-        if (Input.GetKey(KeyCode.Space) && isGrounded == true)
+        // Make the player jump, unless the cursor is unlocked
+        if (Input.GetKey(KeyCode.Space) && isGrounded == true && Cursor.lockState == CursorLockMode.Locked)
         {
             Jump();
         }
@@ -134,10 +162,11 @@ public class PlayerControl_Default : MonoBehaviour
             // Check damage to be dealt and deal it
             int damageAmount = area.gameObject.GetComponent<DamageArea>().GetDamageAmount();
             health -= damageAmount;
-            Debug.Log($"Damage Taken: {damageAmount}");
+            healthDisplay.text = $"Health: {health}/{healthMax}";
             if (health <= 0)
             {
                 isDead = true;
+                health = 0;
             }
         }
     }
@@ -157,11 +186,12 @@ public class PlayerControl_Default : MonoBehaviour
             health -= damageAmount;
             if (damageAmount > 0)
             {
-                Debug.Log($"Damage Taken: {damageAmount}");
+                healthDisplay.text = $"Health: {health}/{healthMax}";
             }
             if (health <= 0)
             {
                 isDead = true;
+                health = 0;
             }
         }
     }
