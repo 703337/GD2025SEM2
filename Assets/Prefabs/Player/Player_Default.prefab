@@ -291,5 +291,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   sprintMult: 2
-  jumpForce: 10
+  jumpForce: 50
   healthMax: 100

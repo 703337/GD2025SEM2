@@ -1,14 +1,11 @@
-using UnityEditor.Callbacks;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.InputSystem.Processors;
 
 public class PlayerControl_Default : MonoBehaviour
 {
     // Initial Variable Values
     [SerializeField] float moveSpeed = 4; // Player movement speed.
     [SerializeField] float sprintMult = 2; // Player movement speed modifier when sprinting.
-    bool sprinting; // Whether or not the player is sprinting.
+    bool isSprinting; // Whether or not the player is sprinting.
     [SerializeField] float jumpForce = 10; // Player jump force.
     bool isGrounded = true; // Checks whether the player is grounded or not.
     [SerializeField] int healthMax = 100; // Player max health;
@@ -67,18 +64,18 @@ public class PlayerControl_Default : MonoBehaviour
         // Check if the player is sprinting
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            sprinting = true;
+            isSprinting = true;
         }
         else
         {
-            sprinting = false;
+            isSprinting = false;
         }
 
         // Get the direction the player is facing relative to their inputs
         var direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         // Move the player based on the direction they are facing
-        if (sprinting == true)
+        if (isSprinting == true)
         {
             transform.Translate(direction * (moveSpeed * sprintMult) * Time.deltaTime);
         }
@@ -134,6 +131,7 @@ public class PlayerControl_Default : MonoBehaviour
         // Take damage when entering a damage area, and mark isDead as true if health goes below 1
         if (area.gameObject.tag == "DamageArea")
         {
+            // Check damage to be dealt and deal it
             int damageAmount = area.gameObject.GetComponent<DamageArea>().GetDamageAmount();
             health -= damageAmount;
             Debug.Log($"Damage Taken: {damageAmount}");
@@ -146,14 +144,15 @@ public class PlayerControl_Default : MonoBehaviour
 
     private void OnTriggerStay(Collider area)
     {
-        // Disable this function if isDead is true
-        if (isDead == true)
-        {
-            return;
-        }
         // Take damage when staying in a damage-over-time area, and mark isDead as true if health goes below 1
         if (area.gameObject.tag == "DamageOverTimeArea")
         {
+            // Don't take damage if isDead is true
+            if (isDead == true)
+            {
+                return;
+            }
+            // Check damage to be dealt and deal it
             int damageAmount = area.gameObject.GetComponent<DamageOverTimeArea>().GetDamageAmount();
             health -= damageAmount;
             if (damageAmount > 0)

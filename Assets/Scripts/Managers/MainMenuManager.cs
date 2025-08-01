@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,7 +24,7 @@ public class MainMenuManager : MonoBehaviour
     // Function to play the game
     public void Play()
     {
-        SceneManager.LoadScene(sceneName: "SampleScene");
+        SceneManager.LoadScene(sceneName: "TestScene");
     }
     
     // Function to close the game

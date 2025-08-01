@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class DamageOverTimeArea : MonoBehaviour
@@ -14,6 +13,12 @@ public class DamageOverTimeArea : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Disable MeshRenderer when playing a full build
+        #if UNITY_EDITOR
+            // Do nothing
+        #else
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
+        #endif
         // Set damageCooldown and damageValue based on _damageOverTimeType
         switch (_damageOverTimeType)
         {
