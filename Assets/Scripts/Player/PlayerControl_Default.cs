@@ -9,17 +9,21 @@ public class PlayerControl_Default : MonoBehaviour
     [SerializeField] int staminaMax = 100; // Player max stamina.
     int stamina; // Player current stamina.
     bool isSprinting; // Whether or not the player is sprinting.
-    float staminaDrainTimer = 0.1f; // Player stamina drain modifier.
-    float staminaRegenTimer = 0.5f; // Player stamina regen modifier.
+    float staminaDrainTimer = 0.1f; // Player stamina drain timer.
+    float staminaRegenTimer = 0.5f; // Player stamina regen timer.
     [SerializeField] float jumpForce = 10; // Player jump force.
     bool isGrounded = true; // Checks whether the player is grounded or not.
     [SerializeField] int healthMax = 100; // Player max health.
     int health; // Player current health.
     bool isDead; // Checks whether the player is dead or not.
+    float h; // Horizontal rotation for the player's body.
+    float v; // Vertical rotation for the player's camera.
+    float attackDuration = 0.25f; // Time the player's attack is active for.
+    float attackCooldown; // Time before the player can attack again.
 
     //References
     Rigidbody rb; // The player's body.
-    Camera face; // The player's face (camera).
+    Camera face; // The player's camera.
     [SerializeField] TextMeshProUGUI healthDisplay; // Display for the player's health.
     [SerializeField] TextMeshProUGUI staminaDisplay; // Display for the player's stamina.
 
@@ -124,16 +128,50 @@ public class PlayerControl_Default : MonoBehaviour
         // CODE BELOW ALTERED FROM A PREVIOUS PROJECT <<<<
         // Handle Camera Movement
         // Get mouse movement
-        float h = Input.GetAxis("Mouse X");
-        float v = Input.GetAxis("Mouse Y");
+        h += Input.GetAxis("Mouse X");
+        v += Input.GetAxis("Mouse Y");
+
+        // Clamp vertical camera movement
+        if (v > 66)
+        {
+            v = 66;
+        }
+        else if (v < -66)
+        {
+            v = -66;
+        }
 
         // Rotate the camera/player based on player input (if cursor locked)
         if (Cursor.lockState == CursorLockMode.Locked)
         {
-            transform.Rotate(0, h, 0);
-            face.transform.Rotate(-v, 0, 0); // <- Find a way to clamp the camera's vertical movement <- !!!
+            transform.rotation = Quaternion.Euler(0, h, 0);
+            face.transform.rotation = Quaternion.Euler(-v, h, 0);
         }
         // CODE ABOVE ALTERED FROM A PREVIOUS PROJECT <<<<
+
+        // Handle attacking
+        if (Input.GetMouseButton(0) && attackCooldown <= 0 || attackDuration < 0.25f)
+        {
+            // Play the attacking animation
+            if (attackDuration == 0.25f)
+            {
+                face.GetComponentInChildren<Animator>().Play("Punching");
+            }
+            // Enable the attached DamageArea
+            face.GetComponentInChildren<BoxCollider>().enabled = true;
+            attackDuration -= Time.deltaTime;
+            // Once attackDuration ends, disable the attached DamageArea and start attackCooldown
+            if (attackDuration <= 0)
+            {
+                attackDuration = 0.25f;
+                attackCooldown = 0.5f;
+                face.GetComponentInChildren<BoxCollider>().enabled = false;
+            }
+        }
+        else if (attackCooldown > 0)
+        {
+            attackCooldown -= Time.deltaTime;
+        }
     }
 
     // Function to jump
