@@ -156,7 +156,7 @@ MonoBehaviour:
   sprintMult: 2
   staminaMax: 100
   jumpForce: 10
-  healthMax: 100
+  healthMax: 10
 --- !u!1001 &9043633615382749170
 PrefabInstance:
   m_ObjectHideFlags: 0

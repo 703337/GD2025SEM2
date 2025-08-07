@@ -7105,7 +7105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6446718885260694336, guid: 65e02a0c8a904a04c94bbb76c33d4994, type: 3}
       propertyPath: jumpForce
-      value: 50
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 6446718885260694336, guid: 65e02a0c8a904a04c94bbb76c33d4994, type: 3}
       propertyPath: healthDisplay

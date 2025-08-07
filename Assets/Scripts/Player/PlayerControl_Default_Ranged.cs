@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerControl_Default : MonoBehaviour
+public class PlayerControl_Default_Ranged : MonoBehaviour
 {
     // Initial Variable Values
     [SerializeField] float moveSpeed = 4; // Player movement speed.
@@ -13,12 +13,12 @@ public class PlayerControl_Default : MonoBehaviour
     float staminaRegenTimer = 0.5f; // Player stamina regen timer.
     [SerializeField] float jumpForce = 10; // Player jump force.
     bool isGrounded = true; // Checks whether the player is grounded or not.
+    float jumpCooldown = 0; // Time before the player can jump again.
     [SerializeField] int healthMax = 100; // Player max health.
     int health; // Player current health.
     bool isDead; // Checks whether the player is dead or not.
     float h; // Horizontal rotation for the player's body.
     float v; // Vertical rotation for the player's camera.
-    float attackDuration = 0.25f; // Time the player's attack is active for.
     float attackCooldown; // Time before the player can attack again.
 
     //References
@@ -26,6 +26,8 @@ public class PlayerControl_Default : MonoBehaviour
     Camera face; // The player's camera.
     [SerializeField] TextMeshProUGUI healthDisplay; // Display for the player's health.
     [SerializeField] TextMeshProUGUI staminaDisplay; // Display for the player's stamina.
+    [SerializeField] GameObject selectedProjectile; // The player's projectile.
+    [SerializeField] Transform projectileSpawner; // The point the player's projectile will be spawned from.
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,6 +36,8 @@ public class PlayerControl_Default : MonoBehaviour
         face = GetComponentInChildren<Camera>();
         // Get the player's rigidbody
         rb = GetComponent<Rigidbody>();
+        // Get the player's projectileSpawner
+        projectileSpawner = face.GetComponentInChildren<Transform>();
         // Lock the cursor by default
         Cursor.lockState = CursorLockMode.Locked;
         // Set current stamina based on max stamina
@@ -118,10 +122,15 @@ public class PlayerControl_Default : MonoBehaviour
         }
 
 
-        // Make the player jump, unless the cursor is unlocked
-        if (Input.GetKey(KeyCode.Space) && isGrounded == true && Cursor.lockState == CursorLockMode.Locked)
+        // Make the player jump, unless the cursor is unlocked or jump is on cooldown
+        jumpCooldown -= Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true && Cursor.lockState == CursorLockMode.Locked)
         {
-            Jump();
+            if (jumpCooldown <= 0)
+            {
+                rb.AddForce(0, jumpForce, 0);
+                jumpCooldown = 0.5f;
+            }
         }
 
 
@@ -150,23 +159,10 @@ public class PlayerControl_Default : MonoBehaviour
         // CODE ABOVE ALTERED FROM A PREVIOUS PROJECT <<<<
 
         // Handle attacking
-        if (Input.GetMouseButton(0) && attackCooldown <= 0 || attackDuration < 0.25f)
+        if (Input.GetMouseButton(0) && attackCooldown <= 0)
         {
-            // Play the attacking animation
-            if (attackDuration == 0.25f)
-            {
-                face.GetComponentInChildren<Animator>().Play("Punching");
-            }
-            // Enable the attached DamageArea
-            face.GetComponentInChildren<BoxCollider>().enabled = true;
-            attackDuration -= Time.deltaTime;
-            // Once attackDuration ends, disable the attached DamageArea and start attackCooldown
-            if (attackDuration <= 0)
-            {
-                attackDuration = 0.25f;
-                attackCooldown = 0.5f;
-                face.GetComponentInChildren<BoxCollider>().enabled = false;
-            }
+            Instantiate(selectedProjectile, projectileSpawner.transform);
+            attackCooldown = 0.5f;
         }
         else if (attackCooldown > 0)
         {
@@ -174,20 +170,23 @@ public class PlayerControl_Default : MonoBehaviour
         }
     }
 
-    // Function to jump
-    void Jump()
-    {
-        rb.AddForce(0, jumpForce, 0);
-    }
-
     // Function to cause effects when colliding with certain tagged objects
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         // Allow jumping when colliding with the ground
         if (collision.gameObject.tag == "Ground")
         {
             isGrounded = true;
-            Debug.Log($"isGrounded: {isGrounded}");
+        }
+    }
+
+    // Function to cause effects when no longer colliding with certain tagged objects
+    private void OnCollisionExit(Collision collision)
+    {
+        // Disable jumping when not colliding with the ground
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = false;
         }
     }
 
@@ -231,17 +230,6 @@ public class PlayerControl_Default : MonoBehaviour
                 isDead = true;
                 health = 0;
             }
-        }
-    }
-
-    // Function to cause effects when no longer colliding with certain tagged objects
-    private void OnCollisionExit(Collision collision)
-    {
-        // Disable jumping when not colliding with the ground
-        if (collision.gameObject.tag == "Ground")
-        {
-            isGrounded = false;
-            Debug.Log($"isGrounded: {isGrounded}");
         }
     }
 }

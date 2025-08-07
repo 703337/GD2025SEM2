@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnerType: 0
+  Enemy_Placeholder: {fileID: 6404461853852972111, guid: b1f6167d7a2e6c04caba6a4cbdd15357, type: 3}

@@ -1,14 +1,16 @@
+using System.IO;
 using UnityEngine;
 
 public class SpawnerLogic_Enemy : MonoBehaviour
 {
     // Initial Variable Values
-    enum spawnerType{Fodder, Special, SpecialEvent, MiniBoss, Boss};
+    enum spawnerType{Test, Fodder, Special, SpecialEvent, MiniBoss, Boss};
     [SerializeField] spawnerType _spawnerType;
     float spawnCooldown;
 
     // References
     GameManager gameManager;
+    [SerializeField] GameObject Enemy_Placeholder;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,6 +21,7 @@ public class SpawnerLogic_Enemy : MonoBehaviour
         switch (_spawnerType)
         {
             // Fodder
+            case spawnerType.Test:
             case spawnerType.Fodder:
                 spawnCooldown = spawnCooldown = Random.Range(2.5f, 5f);
                 break;
@@ -44,6 +47,17 @@ public class SpawnerLogic_Enemy : MonoBehaviour
             // Check _spawnerType
             switch (_spawnerType)
             {
+                case spawnerType.Test:
+                    if (gameManager.testQuota > 0)
+                    {
+                        Instantiate(Enemy_Placeholder, new Vector3((transform.position.x - Random.Range(-5f, 5f)), transform.position.y, (transform.position.z - Random.Range(-5f, 5f))), transform.rotation);
+                        Debug.Log("Placeholder Spawned");
+                        // decrease the quota by one
+                        gameManager.testQuota -= 1;
+                        // Reset spawnCooldown
+                        spawnCooldown = Random.Range(2.5f, 5f);
+                    }
+                    break;
                 // Fodder
                 case spawnerType.Fodder:
                     // Only spawn an enemy if the quota is not met
@@ -150,6 +164,7 @@ public class SpawnerLogic_Enemy : MonoBehaviour
                 switch (_spawnerType)
                 {
                     // Fodder
+                    case spawnerType.Test:
                     case spawnerType.Fodder:
                         spawnCooldown = spawnCooldown = Random.Range(2.5f, 5f);
                         break;

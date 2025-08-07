@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Initial Variable Values
+    public int testQuota;
     public int fodderQuota;
     public int specialQuota;
     public int specialEventQuota;
