@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -20,9 +21,14 @@ public class EnemyControl_Default : MonoBehaviour
     float v; // Vertical rotation for the enemy's camera.
     float attackDuration = 0.25f; // Time the enemy's attack is active for.
     float attackCooldown; // Time before the enemy can attack again.
+    //Dictionary<string, float> DecisionPoints = new Dictionary<string, float>(); // Dictionary for points towards decisions.
+    Dictionary<string, bool> DecisionChecks = new Dictionary<string, bool>(); // Dictionary for checks that award points towards decisions.
 
-    //References
+    // References
     Rigidbody rb; // The enemy's body.
+    Collider playerLeftCheck; // Trigger area to check if "Player Left". // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Set the reference via Start()
+    Collider playerCentreCheck; // Trigger area to check if "Player Centred". // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Set the reference via Start()
+    Collider playerRightCheck; // Trigger area to check if "Player Right". // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Set the reference via Start()
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,12 +39,38 @@ public class EnemyControl_Default : MonoBehaviour
         stamina = staminaMax;
         // Set current health based on max health
         health = healthMax;
+        // Create dictionaries
+        CreateDictionary();
+    }
+
+    // Function to create dictionary values
+    void CreateDictionary()
+    {
+        // DecisionPoints
+        //DecisionPoints.Add("Move Forward", 0f);
+        //DecisionPoints.Add("Turn Left", 0f);
+        //DecisionPoints.Add("Turn Right", 0f);
+        //DecisionPoints.Add("Attack", 0f);
+        // DecisionChecks
+        DecisionChecks.Add("Sees Player", false);
+        DecisionChecks.Add("Player Left", false);
+        DecisionChecks.Add("Player Centred", false);
+        DecisionChecks.Add("Player Right", false);
+        DecisionChecks.Add("Player in Attack Range", false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // No movement behaviour right now.
+        // Reset decision points from last Update()
+        CreateDictionary();
+
+        // Run decision checks
+        // Check if player is visible and to the left
+        if (playerLeftCheck.CompareTag("Player")) // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Make sure this works
+        {
+            transform.rotation = Quaternion.Euler(0, 1, 0);
+        }
     }
 
     // Function to jump
