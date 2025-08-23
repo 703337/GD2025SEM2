@@ -39,6 +39,8 @@ public class EnemyControl_Default : MonoBehaviour
         stamina = staminaMax;
         // Set current health based on max health
         health = healthMax;
+        // Get the enemy's playerLeftCheck
+        playerLeftCheck = transform.Find("PlayerDetectionLeft").GetComponent<BoxCollider>();
         // Create dictionaries
         CreateDictionary();
     }
@@ -63,13 +65,13 @@ public class EnemyControl_Default : MonoBehaviour
     void Update()
     {
         // Reset decision points from last Update()
-        CreateDictionary();
+        //CreateDictionary();
 
         // Run decision checks
         // Check if player is visible and to the left
-        if (playerLeftCheck.CompareTag("Player")) // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Make sure this works
+        if (playerLeftCheck) // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Make this check for the player entering it.
         {
-            transform.rotation = Quaternion.Euler(0, 1, 0);
+            transform.rotation = Quaternion.Euler(0, 1, 0); // MAKE THIS WORK
         }
     }
 

@@ -3968,6 +3968,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2006666269}
     m_Modifications:
+    - target: {fileID: 638616135744890059, guid: 0f06ae6e1a1b61746a4c546e1b2fac0f, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 8453566690210044946, guid: 0f06ae6e1a1b61746a4c546e1b2fac0f, type: 3}
       propertyPath: m_Name
       value: Stairs
